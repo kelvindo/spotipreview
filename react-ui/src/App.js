@@ -60,6 +60,10 @@ function App() {
         >
           Learn React
         </a></p>
+        <audio controls>
+          <source src="https://p.scdn.co/mp3-preview/f88d25861c1058665f3207f1f9885566586c35ec" type="audio/mp3"/>
+          Your browser does not support the audio element.
+        </audio>
       </header>
     </div>
   );
