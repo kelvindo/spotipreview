@@ -8,9 +8,8 @@ const PORT = process.env.PORT || 5000;
 
 var SpotifyWebApi = require('spotify-web-api-node');
 var spotifyApi = new SpotifyWebApi({
-  clientId: '',
-  clientSecret: '',
-  redirectUri: 'http://www.example.com/callback'
+  clientId: process.env.SPOTIFY_ID,
+  clientSecret: process.env.SPOTIFY_SECRET,
 });
 
 spotifyApi.clientCredentialsGrant().then(
@@ -65,7 +64,6 @@ if (!isDev && cluster.isMaster) {
           songDatas.push(songData);
         }
       }
-      console.log(songDatas);
       res.json({"song_datas": songDatas});
     }, function(err) {
       console.log('Something went wrong!', err);

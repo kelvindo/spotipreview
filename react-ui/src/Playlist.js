@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import './Playlist.css';
  
 function Playlist() {
@@ -36,22 +36,8 @@ function Playlist() {
     setCurrentIndex(prevIndex => (prevIndex + 1) % songSamples.length)
   });
 
-  // If pressed key is our target key then set to true
-  const downHandler = useCallback(({ key }) => {
-    console.log("Key Pressed: ", key);
-    if (key === "n") {
-      console.log("next song", currentIndex);
-      setCurrentIndex(prevIndex => (prevIndex + 1) % songSamples.length)
-    }
-
-    if (key === "Enter") {
-      console.log("Search", query);
-      fetchSongSamples();
-    }
-  }, []);
-
   const handleUserKeyPress = useCallback(event => {
-    const { key, keyCode } = event;
+    const { key } = event;
 
     if (key === "ArrowRight") {
       setCurrentIndex(prevIndex => (prevIndex + 1))
