@@ -32,7 +32,6 @@ function Playlist() {
   };
 
   const nextSong = useCallback(() => {
-    console.log(currentIndex);
     setCurrentIndex(prevIndex => (prevIndex + 1) % songSamples.length)
   });
 

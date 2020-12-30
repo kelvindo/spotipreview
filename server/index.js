@@ -60,7 +60,8 @@ if (!isDev && cluster.isMaster) {
         }
       }
       res.json({"song_datas": songDatas});
-    }, function(err) {
+    })
+    .catch(function(err) {
       console.log('Something went wrong!', err);
     });
   });
