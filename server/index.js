@@ -6,6 +6,26 @@ const numCPUs = require('os').cpus().length;
 const isDev = process.env.NODE_ENV !== 'production';
 const PORT = process.env.PORT || 5000;
 
+var SpotifyWebApi = require('spotify-web-api-node');
+var spotifyApi = new SpotifyWebApi({
+  clientId: '',
+  clientSecret: '',
+  redirectUri: 'http://www.example.com/callback'
+});
+
+spotifyApi.clientCredentialsGrant().then(
+  function(data) {
+    console.log('The access token expires in ' + data.body['expires_in']);
+    console.log('The access token is ' + data.body['access_token']);
+ 
+    // Save the access token so that it's used in future calls
+    spotifyApi.setAccessToken(data.body['access_token']);
+  },
+  function(err) {
+    console.log('Something went wrong when retrieving an access token', err);
+  }
+);
+
 // Multi-process to utilize all CPU cores.
 if (!isDev && cluster.isMaster) {
   console.error(`Node cluster master ${process.pid} is running`);
@@ -28,6 +48,28 @@ if (!isDev && cluster.isMaster) {
   // Answer API requests.
   app.get('/api', function (req, res) {
     res.json({"message": "Testing test test"})
+  });
+
+   // Fetch playlist songs.
+  app.get('/playlist', function (req, res) {
+    spotifyApi.getPlaylistTracks(req.query.playlist_id)
+    .then(function(data) {
+      const songDatas = [];
+      for (var item of data.body.items) {
+        if (item.track && item.track.preview_url) {
+          const songData = {
+            "name": item.track.name,
+            "sample": item.track.preview_url,
+            "artist": item.track.artists[0].name,
+          }
+          songDatas.push(songData);
+        }
+      }
+      console.log(songDatas);
+      res.json({"song_datas": songDatas});
+    }, function(err) {
+      console.log('Something went wrong!', err);
+    });
   });
 
   // All remaining requests return the React app, so it can handle routing.
