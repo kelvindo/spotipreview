@@ -44,11 +44,6 @@ if (!isDev && cluster.isMaster) {
   // Priority serve any static files.
   app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
 
-  // Answer API requests.
-  app.get('/api', function (req, res) {
-    res.json({"message": "Testing test test"})
-  });
-
    // Fetch playlist songs.
   app.get('/playlist', function (req, res) {
     spotifyApi.getPlaylistTracks(req.query.playlist_id)
