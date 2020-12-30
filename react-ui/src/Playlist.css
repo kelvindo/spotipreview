@@ -1,4 +1,8 @@
 
+input {
+  text-align: center;
+}
+
 .input-container{
 	position:relative;
 	margin-bottom:25px;
