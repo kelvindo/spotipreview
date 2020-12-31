@@ -11,7 +11,6 @@ function App() {
         <div>
           <Playlist/>
         </div>
-        
       </header>
     </div>
   );
