@@ -10,7 +10,7 @@ function SearchResults({ artistResults, playlistResults, onClick }) {
             {artistResults.map(artist => (
               <tr key={artist.key}>
                 <td>
-                  <p onClick={() => onClick(artist.spotify_id, artist.type)}>{artist.name}</p>
+                  <p className="searchResult" onClick={() => onClick(artist.spotify_id, artist.type)}>{artist.name}</p>
                 </td>
               </tr>
             ))}
@@ -22,7 +22,7 @@ function SearchResults({ artistResults, playlistResults, onClick }) {
             {playlistResults.map(playlist => (
               <tr key={playlist.key}>
                 <td>
-                  <p onClick={() => onClick(playlist.spotify_id, playlist.type)}>{playlist.name}</p>
+                  <p className="searchResult" onClick={() => onClick(playlist.spotify_id, playlist.type)}>{playlist.name}</p>
                 </td>
               </tr> 
             ))}

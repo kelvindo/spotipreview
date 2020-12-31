@@ -52,6 +52,10 @@ input {
 	top:1px;
 }
 
+.searchResult:hover {
+	background-color:#5cbf2a;
+}
+
 .audioPlayer {
   margin: 5px;
 }

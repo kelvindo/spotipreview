@@ -5,7 +5,7 @@ import SearchResults from './SearchResults';
  
 function Search() {
 
-  const [query, setQuery] = useState('tritonal');
+  const [query, setQuery] = useState('');
   const [artistResults, setArtistResults] = useState([]);
   const [playlistResults, setPlaylistResults] = useState([]);
   const [spotifyID, setSpotifyID] = useState('');
