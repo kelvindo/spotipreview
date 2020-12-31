@@ -4,7 +4,7 @@ import './Playlist.css';
 function Playlist() {
 
   const audioRef = useRef();
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState('37i9dQZF1DWSTc9FdySHtz');
   const [playlistNameOwner, setPlaylistNameOwner] = useState('')
   const [songSamples, setSongSamples] = useState(['', '']);
   const [currentIndex, setCurrentIndex] = useState(1);
