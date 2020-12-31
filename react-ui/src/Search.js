@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './style.css';
-import Playlist from "./Playlist";
+import Tracklist from "./Tracklist";
 import SearchResults from './SearchResults';
  
 // Search is a component that can search for an artist/playlist,
@@ -53,7 +53,7 @@ function Search() {
   // - Search query input.
   // - Search button.
   // - Search results (hide if result clicked).
-  // - Playlist + Player.
+  // - Tracklist + Player.
   return (
     <div className="searchMain">
       <div className="input-container">
@@ -73,7 +73,7 @@ function Search() {
           onClick={clickSearchResult}
         />
       }
-      <Playlist 
+      <Tracklist 
         spotifyID={spotifyID}
         type={type}
       />

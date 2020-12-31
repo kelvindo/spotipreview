@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import './style.css';
 import TracklistPlayer from './TracklistPlayer';
  
-// Playlist is a compoenent that takes a spotifyID and type to
+// Tracklist is a compoenent that takes a spotifyID and type to
 // fetch either artist or playlist info and tracks. 
-function Playlist({ spotifyID, type }) {
+function Tracklist({ spotifyID, type }) {
   // displayText shows either artist name or playlist + owner.
   const [displayText, setDisplayText] = useState('')
 
@@ -75,7 +75,7 @@ function Playlist({ spotifyID, type }) {
   // - Display text (artist or playlist + owner).
   // - TracklistPlayer with songSamples.
   return (
-    <div className="playlistMain">
+    <div className="tracklistMain">
       <h3>{ displayText }</h3>
       <TracklistPlayer
         songSamples={songSamples}
@@ -84,4 +84,4 @@ function Playlist({ spotifyID, type }) {
   );
 }
  
-export default Playlist;
+export default Tracklist;
