@@ -59,6 +59,33 @@ if (!isDev && cluster.isMaster) {
     });
   });
 
+  // Search for playlists.
+  app.get('/artist', function (req, res) {
+    const artistTopTracksPromise = spotifyApi.getArtistTopTracks("4kubsO16bEfCADaVUyoYb6", "US");
+    Promise.all([artistTopTracksPromise])
+    .then(([ artistTopTracks ]) => {
+      const songDatas = [];
+      for (var track of artistTopTracks.body.tracks) {
+        if (track.preview_url) {
+          const artists = track.artists.map(artist => { return artist.name });
+          const artists_joined = artists.join(", ");
+          const songData = {
+            "name": track.name,
+            "sample": track.preview_url,
+            "artist": artists_joined,
+          }
+          songDatas.push(songData);
+        }
+      }
+      res.json({
+        "tracks": songDatas,
+      });
+    })
+    .catch(function(err) {
+      console.log('Something went wrong!', err);
+    });
+  });
+
    // Fetch playlist songs.
   app.get('/playlist', function (req, res) {
     const playlistInfoPromise = spotifyApi.getPlaylist(req.query.playlist_id);
