@@ -28,9 +28,16 @@ function Playlist({ playlistID }) {
       })
   };
 
+  const clearSongSamples = () => {
+    setPlaylistNameOwner("");
+    setSongSamples([]);
+  };
+
   useEffect(() => {
     if (playlistID) {
       fetchSongSamples();
+    } else {
+      clearSongSamples();
     }
   }, [playlistID]);
 

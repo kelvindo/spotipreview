@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import './Playlist.css';
  
-function Tracklist({ songSamples, spotifyID }) {
+function Tracklist({ songSamples }) {
   const audioRef = useRef();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentSongArtist, setCurrentSongArtist] = useState('');
@@ -35,6 +35,10 @@ function Tracklist({ songSamples, spotifyID }) {
       setCurrentSongArtist(songArtist);
       setCurrentSongSample(songSamples[currentIndex].sample);
       audioRef.current.load();
+    } else {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
     }
   }, [currentIndex, songSamples]);
 
