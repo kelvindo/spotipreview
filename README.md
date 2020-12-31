@@ -63,5 +63,4 @@ git push heroku master
  - Authenticate inidividual users to save likes
  - Paginate search results and songs
  - Make artists clickable
- - Add back button
- - Append artist similar songs to artist songs
+ -- Add back button to make app navigatable
