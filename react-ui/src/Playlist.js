@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react';
 import './Playlist.css';
 import Tracklist from './Tracklist';
  
-function Playlist({ playlistID }) {
+function Playlist({ spotifyID, type }) {
 
-  const [playlistNameOwner, setPlaylistNameOwner] = useState('')
+  const [displayText, setDisplayText] = useState('')
   const [songSamples, setSongSamples] = useState([]);
 
   //spotify:playlist:37i9dQZF1DWSTc9FdySHtz
   //spotify:playlist:5vwNi0Km340HsC5UfwaaIa
   //spotify:playlist:6pCv62MghRNCEFaUSi7OSD
 
-  const fetchSongSamples = () => {
-    const params = new URLSearchParams({playlist_id: playlistID});
+  const fetchPlaylistTracks = () => {
+    const params = new URLSearchParams({playlist_id: spotifyID});
     fetch("/playlist?" + params)
       .then(response => {
         if (!response.ok) {
@@ -21,7 +21,24 @@ function Playlist({ playlistID }) {
         return response.json();
       })
       .then(json => {
-        setPlaylistNameOwner(json.playlist_name + " by " + json.playlist_owner);
+        setDisplayText(json.playlist_name + " by " + json.playlist_owner);
+        setSongSamples(json.song_datas);
+      }).catch(e => {
+        console.log(e);
+      })
+  };
+
+  const fetchArtistTracks = () => {
+    const params = new URLSearchParams({artist_id: spotifyID});
+    fetch("/artist?" + params)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`status ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(json => {
+        setDisplayText(json.artist_name);
         setSongSamples(json.song_datas);
       }).catch(e => {
         console.log(e);
@@ -29,24 +46,30 @@ function Playlist({ playlistID }) {
   };
 
   const clearSongSamples = () => {
-    setPlaylistNameOwner("");
+    setDisplayText("");
     setSongSamples([]);
   };
 
   useEffect(() => {
-    if (playlistID) {
-      fetchSongSamples();
+    if (spotifyID) {
+      if (type === "artist") {
+        fetchArtistTracks();
+      } else if (type === "playlist") {
+        fetchPlaylistTracks();
+      } else {
+        console.error("Unknown type");
+      }
+      
     } else {
       clearSongSamples();
     }
-  }, [playlistID]);
+  }, [spotifyID]);
 
   return (
     <div className="playlistMain">
-      <p>{ playlistNameOwner }</p>
+      <p>{ displayText }</p>
       <Tracklist
         songSamples={songSamples}
-        spotifyID={playlistID}
       />
     </div>
   );

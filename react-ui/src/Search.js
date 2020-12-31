@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import './Playlist.css';
-import Artist from "./Artist";
 import Playlist from "./Playlist";
 import SearchResults from './SearchResults';
  
@@ -9,8 +8,8 @@ function Search() {
   const [query, setQuery] = useState('tritonal');
   const [artistResults, setArtistResults] = useState([]);
   const [playlistResults, setPlaylistResults] = useState([]);
-  const [artistID, setArtistID] = useState('');
-  const [playlistID, setPlaylistID] = useState('');
+  const [spotifyID, setSpotifyID] = useState('');
+  const [type, setType] = useState('');
 
   const search = () => {
     const params = new URLSearchParams({search_query: query});
@@ -24,24 +23,16 @@ function Search() {
       .then(json => {
         setArtistResults(json.artists);
         setPlaylistResults(json.playlists);
-        setArtistID("");
-        setPlaylistID("");
+        setSpotifyID("");
+        setType("");
       }).catch(e => {
         console.log(e);
       })
   };
 
   const clickSearchResult = (spotifyID, type) => {
-    console.log("Clicked", spotifyID, type);
-    if (type === "artist") {
-      setArtistID(spotifyID);
-      setPlaylistID("");
-    } else if (type === "playlist") {
-      setArtistID("");
-      setPlaylistID(spotifyID);
-    } else {
-      console.error("Unexpected type");
-    }
+    setSpotifyID(spotifyID);
+    setType(type);
   };
 
   return (
@@ -56,18 +47,16 @@ function Search() {
       </div>
       <button className="myButton" onClick={search}>Search</button>
       { (artistResults.length > 0 || playlistResults.length > 0) &&
-        !(artistID || playlistID) &&
+        !spotifyID &&
         <SearchResults
           artistResults={artistResults}
           playlistResults={playlistResults}
           onClick={clickSearchResult}
         />
       }
-      <Artist 
-        artistID={artistID}
-      />
       <Playlist 
-        playlistID={playlistID}
+        spotifyID={spotifyID}
+        type={type}
       />
     </div>
   );
