@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Playlist.css';
-import Tracklist from './Tracklist';
+import TracklistPlayer from './TracklistPlayer';
  
 // Playlist is a compoenent that takes a spotifyID and type to
 // fetch either artist or playlist info and tracks. 
@@ -73,11 +73,11 @@ function Playlist({ spotifyID, type }) {
 
   // Consists of:
   // - Display text (artist or playlist + owner).
-  // - Tracklist with songSamples.
+  // - TracklistPlayer with songSamples.
   return (
     <div className="playlistMain">
       <h3>{ displayText }</h3>
-      <Tracklist
+      <TracklistPlayer
         songSamples={songSamples}
       />
     </div>

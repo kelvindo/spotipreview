@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import './Playlist.css';
  
-// Tracklist is a stateless componenet that takes in a list of songSamples
+// TracklistPlayer is a stateless componenet that takes in a list of songSamples
 // and creates a music player with track controls.
-function Tracklist({ songSamples }) {
+function TracklistPlayer({ songSamples }) {
   // audioRef is a reference to the audio element.
   const audioRef = useRef();
 
@@ -81,9 +81,9 @@ function Tracklist({ songSamples }) {
   // - Track player control buttons.
   // - Audio player.
   return (
-    <div className="tracklistMain">
+    <div className="tracklistPlayerMain">
       { songSamples.length > 0 &&
-        <div className="tracklistInner">
+        <div>
           <p>{currentIndex + 1}/{songSamples.length} {currentSongArtist}</p>
           <div className="trackControls">
           <button className="myButton" onClick={prevSong}>Prev</button>
@@ -99,4 +99,4 @@ function Tracklist({ songSamples }) {
   );
 }
  
-export default Tracklist;
+export default TracklistPlayer;
