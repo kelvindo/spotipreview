@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Playlist.css';
 import Tracklist from './Tracklist';
  
-function Playlist() {
+function Playlist({ playlistID }) {
 
-  const [query, setQuery] = useState('5vwNi0Km340HsC5UfwaaIa');
   const [playlistNameOwner, setPlaylistNameOwner] = useState('')
   const [songSamples, setSongSamples] = useState([]);
 
@@ -13,7 +12,7 @@ function Playlist() {
   //spotify:playlist:6pCv62MghRNCEFaUSi7OSD
 
   const fetchSongSamples = () => {
-    const params = new URLSearchParams({playlist_id: query});
+    const params = new URLSearchParams({playlist_id: playlistID});
     fetch("/playlist?" + params)
       .then(response => {
         if (!response.ok) {
@@ -29,17 +28,14 @@ function Playlist() {
       })
   };
 
+  useEffect(() => {
+    if (playlistID) {
+      fetchSongSamples();
+    }
+  }, [playlistID]);
+
   return (
     <div className="playlistMain">
-      <div className="input-container">
-        <input 
-          type="text" 
-          placeholder="Playlist ID"
-          value={query}
-          onChange={event => setQuery(event.target.value)}
-        />
-      </div>
-      <button className="myButton" onClick={fetchSongSamples}>Load Playlist</button>
       <p>{ playlistNameOwner }</p>
       <Tracklist
         songSamples={songSamples}

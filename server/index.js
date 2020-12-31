@@ -46,12 +46,35 @@ if (!isDev && cluster.isMaster) {
 
   // Search for playlists.
   app.get('/search', function (req, res) {
-    const playlistSearchPromise = spotifyApi.searchPlaylists("edm workout")
-    Promise.all([playlistSearchPromise])
-    .then(([ playlistSearchResults ]) => {
-      console.log(playlistSearchResults.body.playlists.items);
+    const searchPromise = spotifyApi.search(req.query.search_query, ["artist", "playlist"], { limit: 5 })
+    Promise.all([searchPromise])
+    .then(([ searchResults ]) => {
+      // Process artist results.
+      const artistResults = [];
+      for (const [index, artist] of searchResults.body.artists.items.entries()) {
+        artistResults.push({
+          "key": index,
+          "name": artist.name,
+          "spotify_id": artist.id,
+          "type": "artist",
+        })
+      }
+
+      // Process playlist results.
+      const playlistResults = [];
+      for (const [index, playlist] of searchResults.body.playlists.items.entries()) {
+        playlistResults.push({
+          "key": index,
+          "name": playlist.name,
+          "spotify_id": playlist.id, 
+          "type": "playlist",
+        })
+      }
+
+      // Return combined jsonified results.
       res.json({
-        "playlist_name": "test",
+        "artists": artistResults,
+        "playlists": playlistResults,
       });
     })
     .catch(function(err) {

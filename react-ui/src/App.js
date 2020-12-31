@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './spotify.svg';
 import './App.css';
-import Playlist from "./Playlist";
+import Search from './Search';
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <div>
-          <Playlist/>
+          <Search/>
         </div>
       </header>
     </div>
