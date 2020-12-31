@@ -49,10 +49,12 @@ function Tracklist({ songSamples }) {
 
   return (
     <div className="tracklistMain">
+      <p>{currentIndex + 1}/{songSamples.length} {currentSongArtist}</p>
+      <div className="trackControls">
       <button className="myButton" onClick={prevSong}>Prev</button>
       <button className="myButton" onClick={nextSong}>Next</button>
-      <p>{currentIndex + 1}/{songSamples.length} {currentSongArtist}</p>
-      <audio controls autoPlay ref={audioRef}>
+      </div>
+      <audio className="audioPlayer" controls autoPlay ref={audioRef}>
         <source src={currentSongSample} type="audio/mp3"/>
         Your browser does not support the audio element.
       </audio>
