@@ -121,10 +121,12 @@ if (!isDev && cluster.isMaster) {
       const songDatas = [];
       for (var item of playlistSongs.body.items) {
         if (item.track && item.track.preview_url) {
+          const artists = item.track.artists.map(artist => { return artist.name });
+          const artists_joined = artists.join(", ");
           const songData = {
             "name": item.track.name,
             "sample": item.track.preview_url,
-            "artist": item.track.artists[0].name,
+            "artist": artists_joined,
           }
           songDatas.push(songData);
         }
