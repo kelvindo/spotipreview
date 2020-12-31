@@ -44,6 +44,21 @@ if (!isDev && cluster.isMaster) {
   // Priority serve any static files.
   app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
 
+  // Search for playlists.
+  app.get('/search', function (req, res) {
+    const playlistSearchPromise = spotifyApi.searchPlaylists("edm workout")
+    Promise.all([playlistSearchPromise])
+    .then(([ playlistSearchResults ]) => {
+      console.log(playlistSearchResults.body.playlists.items);
+      res.json({
+        "playlist_name": "test",
+      });
+    })
+    .catch(function(err) {
+      console.log('Something went wrong!', err);
+    });
+  });
+
    // Fetch playlist songs.
   app.get('/playlist', function (req, res) {
     const playlistInfoPromise = spotifyApi.getPlaylist(req.query.playlist_id);
@@ -51,8 +66,6 @@ if (!isDev && cluster.isMaster) {
 
     Promise.all([playlistInfoPromise, playlistSongsPromise])
     .then(([ playlistInfo, playlistSongs ]) => {
-      console.log(playlistInfo);
-      console.log(playlistSongs);
       const songDatas = [];
       for (var item of playlistSongs.body.items) {
         if (item.track && item.track.preview_url) {
