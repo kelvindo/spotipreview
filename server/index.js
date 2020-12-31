@@ -25,6 +25,17 @@ spotifyApi.clientCredentialsGrant().then(
   }
 );
 
+// extractSongData is a helper to extract needed information about a track.
+const extractSongData = (track) => {
+  const artists = track.artists.map(artist => { return artist.name });
+  const artists_joined = artists.join(", ");
+  return {
+    "name": track.name,
+    "sample": track.preview_url,
+    "artist": artists_joined,
+  }
+};
+
 // Multi-process to utilize all CPU cores.
 if (!isDev && cluster.isMaster) {
   console.error(`Node cluster master ${process.pid} is running`);
@@ -82,25 +93,29 @@ if (!isDev && cluster.isMaster) {
     });
   });
 
-  // Search for playlists.
+  // Fetch artists top tracks and recommended tracks.
   app.get('/artist', function (req, res) {
     const artistInfoPromise = spotifyApi.getArtist(req.query.artist_id);
     const artistTopTracksPromise = spotifyApi.getArtistTopTracks(req.query.artist_id, "US");
-    Promise.all([artistInfoPromise, artistTopTracksPromise])
-    .then(([ artistInfo, artistTopTracks ]) => {
+    const artistTrackRecsPromise = spotifyApi.getRecommendations({ seed_artists: [req.query.artist_id], limit: 25 })
+    Promise.all([artistInfoPromise, artistTopTracksPromise, artistTrackRecsPromise])
+    .then(([ artistInfo, artistTopTracks, artistTrackRecs ]) => {
       const songDatas = [];
+      
+      // Append the artists top tracks.
       for (var track of artistTopTracks.body.tracks) {
         if (track.preview_url) {
-          const artists = track.artists.map(artist => { return artist.name });
-          const artists_joined = artists.join(", ");
-          const songData = {
-            "name": track.name,
-            "sample": track.preview_url,
-            "artist": artists_joined,
-          }
-          songDatas.push(songData);
+          songDatas.push(extractSongData(track));
         }
       }
+
+      // Append recommended tracks based on this artist.
+      for (var track of artistTrackRecs.body.tracks) {
+        if (track.preview_url) {
+          songDatas.push(extractSongData(track));
+        }
+      }
+
       res.json({
         "artist_name": artistInfo.body.name,
         "song_datas": songDatas,
@@ -121,14 +136,7 @@ if (!isDev && cluster.isMaster) {
       const songDatas = [];
       for (var item of playlistSongs.body.items) {
         if (item.track && item.track.preview_url) {
-          const artists = item.track.artists.map(artist => { return artist.name });
-          const artists_joined = artists.join(", ");
-          const songData = {
-            "name": item.track.name,
-            "sample": item.track.preview_url,
-            "artist": artists_joined,
-          }
-          songDatas.push(songData);
+          songDatas.push(extractSongData(item.track));
         }
       }
       res.json({

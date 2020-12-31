@@ -7,7 +7,7 @@ import Tracklist from './Tracklist';
 function Playlist({ spotifyID, type }) {
   // displayText shows either artist name or playlist + owner.
   const [displayText, setDisplayText] = useState('')
-  
+
   // songSamples is the list of song data to pass to the Tracklist.
   const [songSamples, setSongSamples] = useState([]);
 
@@ -40,7 +40,7 @@ function Playlist({ spotifyID, type }) {
         return response.json();
       })
       .then(json => {
-        setDisplayText(json.artist_name);
+        setDisplayText(json.artist_name + " top tracks and recommendations");
         setSongSamples(json.song_datas);
       }).catch(e => {
         console.log(e);
@@ -76,7 +76,7 @@ function Playlist({ spotifyID, type }) {
   // - Tracklist with songSamples.
   return (
     <div className="playlistMain">
-      <p>{ displayText }</p>
+      <h3>{ displayText }</h3>
       <Tracklist
         songSamples={songSamples}
       />
