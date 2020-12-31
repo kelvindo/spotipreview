@@ -64,3 +64,4 @@ git push heroku master
  - Paginate search results and songs
  - Make artists clickable
  - Add back button
+ - Append artist similar songs to artist songs
