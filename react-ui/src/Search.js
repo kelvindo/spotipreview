@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Playlist.css';
 import Playlist from "./Playlist";
+import SearchResults from './SearchResults';
  
 function Search() {
 
@@ -22,12 +23,14 @@ function Search() {
       .then(json => {
         setArtistResults(json.artists);
         setPlaylistResults(json.playlists);
+        setArtistID("");
+        setPlaylistID("");
       }).catch(e => {
         console.log(e);
       })
   };
 
-  const clickResult = (spotifyID, type) => {
+  const clickSearchResult = (spotifyID, type) => {
     console.log("Clicked", spotifyID, type);
     if (type === "artist") {
       setArtistID(spotifyID);
@@ -51,30 +54,14 @@ function Search() {
         />
       </div>
       <button className="myButton" onClick={search}>Search</button>
-      <h3>Artists</h3>
-      <table className="center">
-        <tbody>
-            {artistResults.map(artist => (
-              <tr key={artist.key}>
-                <td>
-                  <p onClick={() => clickResult(artist.spotify_id, artist.type)}>{artist.name}</p>
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
-      <h3>Playlists</h3>
-      <table className="center">
-        <tbody>
-            {playlistResults.map(playlist => (
-              <tr key={playlist.key}>
-                <td>
-                  <p onClick={() => clickResult(playlist.spotify_id, playlist.type)}>{playlist.name}</p>
-                </td>
-              </tr> 
-            ))}
-        </tbody>
-      </table>
+      { (artistResults.length > 0 || playlistResults.length > 0) &&
+        !(artistID || playlistID) &&
+        <SearchResults
+          artistResults={artistResults}
+          playlistResults={playlistResults}
+          onClick={clickSearchResult}
+        />
+      }
       <Playlist 
         playlistID={playlistID}
       />
