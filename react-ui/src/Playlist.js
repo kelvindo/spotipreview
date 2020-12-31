@@ -5,6 +5,7 @@ function Playlist() {
 
   const audioRef = useRef();
   const [query, setQuery] = useState('');
+  const [playlistNameOwner, setPlaylistNameOwner] = useState('')
   const [songSamples, setSongSamples] = useState(['', '']);
   const [currentIndex, setCurrentIndex] = useState(1);
   const [currentSongArtist, setCurrentSongArtist] = useState('');
@@ -24,6 +25,7 @@ function Playlist() {
         return response.json();
       })
       .then(json => {
+        setPlaylistNameOwner(json.playlist_name + " by " + json.playlist_owner);
         setSongSamples(json.song_datas);
         setCurrentIndex(0);
       }).catch(e => {
@@ -54,7 +56,7 @@ function Playlist() {
     setCurrentSongArtist(songArtist);
     setCurrentSongSample(songSamples[currentIndex].sample);
     audioRef.current.load();
-  }, [currentIndex]);
+  }, [currentIndex, playlistNameOwner]);
 
    // Add event listeners
    useEffect(() => {
@@ -67,11 +69,6 @@ function Playlist() {
 
   return (
     <div className="playlistMain">
-      {/* <input
-        type="text"
-        value={query}
-        onChange={event => setQuery(event.target.value)}
-      /> */}
       <div className="input-container">
         <input 
           type="text" 
@@ -82,7 +79,8 @@ function Playlist() {
       </div>
       <button className="myButton" onClick={fetchSongSamples}>Load Playlist</button>
       <button className="myButton" onClick={nextSong}>Next Song</button>
-      <p>{currentIndex}/{songSamples.length} {currentSongArtist}</p>
+      <p>{ playlistNameOwner }</p>
+      <p>{currentIndex + 1}/{songSamples.length} {currentSongArtist}</p>
       <audio controls autoPlay ref={audioRef}>
         <source src={currentSongSample} type="audio/mp3"/>
         Your browser does not support the audio element.

@@ -46,10 +46,15 @@ if (!isDev && cluster.isMaster) {
 
    // Fetch playlist songs.
   app.get('/playlist', function (req, res) {
-    spotifyApi.getPlaylistTracks(req.query.playlist_id)
-    .then(function(data) {
+    const playlistInfoPromise = spotifyApi.getPlaylist(req.query.playlist_id);
+    const playlistSongsPromise = spotifyApi.getPlaylistTracks(req.query.playlist_id);
+
+    Promise.all([playlistInfoPromise, playlistSongsPromise])
+    .then(([ playlistInfo, playlistSongs ]) => {
+      console.log(playlistInfo);
+      console.log(playlistSongs);
       const songDatas = [];
-      for (var item of data.body.items) {
+      for (var item of playlistSongs.body.items) {
         if (item.track && item.track.preview_url) {
           const songData = {
             "name": item.track.name,
@@ -59,7 +64,12 @@ if (!isDev && cluster.isMaster) {
           songDatas.push(songData);
         }
       }
-      res.json({"song_datas": songDatas});
+      res.json({
+        "playlist_name": playlistInfo.body.name,
+        "playlist_description": playlistInfo.body.description,
+        "playlist_owner": playlistInfo.body.owner.display_name,
+        "song_datas": songDatas,
+      });
     })
     .catch(function(err) {
       console.log('Something went wrong!', err);
