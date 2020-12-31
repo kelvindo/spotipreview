@@ -38,6 +38,13 @@ function Tracklist({ songSamples }) {
     }
   }, [currentIndex]);
 
+  useEffect(() => {
+    setCurrentIndex(0);
+    if (audioRef.current) {
+      audioRef.current.load();
+    }
+  }, [songSamples]);
+
    // Add event listeners
    useEffect(() => {
     window.addEventListener('keydown', handleUserKeyPress);
