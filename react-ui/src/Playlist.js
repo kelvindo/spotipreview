@@ -2,15 +2,16 @@ import React, { useEffect, useState } from 'react';
 import './Playlist.css';
 import Tracklist from './Tracklist';
  
+// Playlist is a compoenent that takes a spotifyID and type to
+// fetch either artist or playlist info and tracks. 
 function Playlist({ spotifyID, type }) {
-
+  // displayText shows either artist name or playlist + owner.
   const [displayText, setDisplayText] = useState('')
+  
+  // songSamples is the list of song data to pass to the Tracklist.
   const [songSamples, setSongSamples] = useState([]);
 
-  //spotify:playlist:37i9dQZF1DWSTc9FdySHtz
-  //spotify:playlist:5vwNi0Km340HsC5UfwaaIa
-  //spotify:playlist:6pCv62MghRNCEFaUSi7OSD
-
+  // fetchPlaylistTracks fetches playlist info and tracks and sets state.
   const fetchPlaylistTracks = () => {
     const params = new URLSearchParams({playlist_id: spotifyID});
     fetch("/playlist?" + params)
@@ -28,6 +29,7 @@ function Playlist({ spotifyID, type }) {
       })
   };
 
+  // fetchArtistTracks fetches artist info and tracks and sets state.
   const fetchArtistTracks = () => {
     const params = new URLSearchParams({artist_id: spotifyID});
     fetch("/artist?" + params)
@@ -45,11 +47,15 @@ function Playlist({ spotifyID, type }) {
       })
   };
 
+  // clearSongSamples is a helper to clear out display text
+  // and song samples if a spotifyID is no longer passed in.
   const clearSongSamples = () => {
     setDisplayText("");
     setSongSamples([]);
   };
 
+  // This effect updates on changes to the spotifyID. If the spotifyID
+  // is set, fetch data accordingly. If it's unset, clear out data.
   useEffect(() => {
     if (spotifyID) {
       if (type === "artist") {
@@ -65,6 +71,9 @@ function Playlist({ spotifyID, type }) {
     }
   }, [spotifyID]);
 
+  // Consists of:
+  // - Display text (artist or playlist + owner).
+  // - Tracklist with songSamples.
   return (
     <div className="playlistMain">
       <p>{ displayText }</p>

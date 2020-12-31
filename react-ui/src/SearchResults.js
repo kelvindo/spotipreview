@@ -1,7 +1,13 @@
 import React from 'react';
 import './Playlist.css';
  
+// SearchResults is a stateless componenet that takes search results and
+// a callback for each result. Search results are displayed and each
+// result is clickable, triggering the callback.
 function SearchResults({ artistResults, playlistResults, onClick }) {
+  // Consists of:
+  // - Artist search results.
+  // - Playlist search results.
   return (
     <div className="searchResultsMain">
       <h3>Artists</h3>
