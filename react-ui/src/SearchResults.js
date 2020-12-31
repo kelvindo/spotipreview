@@ -1,5 +1,5 @@
 import React from 'react';
-import './Playlist.css';
+import './style.css';
  
 // SearchResults is a stateless componenet that takes search results and
 // a callback for each result. Search results are displayed and each

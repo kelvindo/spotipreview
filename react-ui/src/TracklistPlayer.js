@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import './Playlist.css';
+import './style.css';
  
 // TracklistPlayer is a stateless componenet that takes in a list of songSamples
 // and creates a music player with track controls.

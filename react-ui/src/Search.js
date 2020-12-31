@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Playlist.css';
+import './style.css';
 import Playlist from "./Playlist";
 import SearchResults from './SearchResults';
  
@@ -17,7 +17,7 @@ function Search() {
 
   // spotifyID is the ID of the entity clicked (artistID or playlistID).
   const [spotifyID, setSpotifyID] = useState('');
-  
+
   // type is the type of entity clicked ("artist" or "playlist").
   const [type, setType] = useState('');
 

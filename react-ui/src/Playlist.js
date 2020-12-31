@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './Playlist.css';
+import './style.css';
 import TracklistPlayer from './TracklistPlayer';
  
 // Playlist is a compoenent that takes a spotifyID and type to
@@ -8,7 +8,7 @@ function Playlist({ spotifyID, type }) {
   // displayText shows either artist name or playlist + owner.
   const [displayText, setDisplayText] = useState('')
 
-  // songSamples is the list of song data to pass to the Tracklist.
+  // songSamples is the list of song data to pass to the TracklistPlayer.
   const [songSamples, setSongSamples] = useState([]);
 
   // fetchPlaylistTracks fetches playlist info and tracks and sets state.
