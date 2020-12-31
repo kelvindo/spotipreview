@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import './Playlist.css';
  
-function Tracklist({ songSamples }) {
+function Tracklist({ songSamples, spotifyID }) {
   const audioRef = useRef();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentSongArtist, setCurrentSongArtist] = useState('');
@@ -36,14 +36,14 @@ function Tracklist({ songSamples }) {
       setCurrentSongSample(songSamples[currentIndex].sample);
       audioRef.current.load();
     }
-  }, [currentIndex]);
+  }, [currentIndex, spotifyID]);
 
   useEffect(() => {
     setCurrentIndex(0);
     if (audioRef.current) {
       audioRef.current.load();
     }
-  }, [songSamples]);
+  }, [spotifyID]);
 
    // Add event listeners
    useEffect(() => {

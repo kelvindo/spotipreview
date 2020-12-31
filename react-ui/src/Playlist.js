@@ -39,6 +39,7 @@ function Playlist({ playlistID }) {
       <p>{ playlistNameOwner }</p>
       <Tracklist
         songSamples={songSamples}
+        spotifyID={playlistID}
       />
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Playlist.css';
+import Artist from "./Artist";
 import Playlist from "./Playlist";
 import SearchResults from './SearchResults';
  
@@ -62,6 +63,9 @@ function Search() {
           onClick={clickSearchResult}
         />
       }
+      <Artist 
+        artistID={artistID}
+      />
       <Playlist 
         playlistID={playlistID}
       />

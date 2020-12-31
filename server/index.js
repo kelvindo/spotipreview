@@ -84,9 +84,10 @@ if (!isDev && cluster.isMaster) {
 
   // Search for playlists.
   app.get('/artist', function (req, res) {
-    const artistTopTracksPromise = spotifyApi.getArtistTopTracks("4kubsO16bEfCADaVUyoYb6", "US");
-    Promise.all([artistTopTracksPromise])
-    .then(([ artistTopTracks ]) => {
+    const artistInfoPromise = spotifyApi.getArtist(req.query.artist_id);
+    const artistTopTracksPromise = spotifyApi.getArtistTopTracks(req.query.artist_id, "US");
+    Promise.all([artistInfoPromise, artistTopTracksPromise])
+    .then(([ artistInfo, artistTopTracks ]) => {
       const songDatas = [];
       for (var track of artistTopTracks.body.tracks) {
         if (track.preview_url) {
@@ -101,7 +102,8 @@ if (!isDev && cluster.isMaster) {
         }
       }
       res.json({
-        "tracks": songDatas,
+        "artist_name": artistInfo.body.name,
+        "song_datas": songDatas,
       });
     })
     .catch(function(err) {
