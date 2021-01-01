@@ -40,7 +40,7 @@ function Tracklist({ spotifyID, type, onClick }) {
         return response.json();
       })
       .then(json => {
-        setDisplayText(json.artist_name + " top tracks and recommendations");
+        setDisplayText(json.artist_name);
         setSongSamples(json.song_datas);
       }).catch(e => {
         console.log(e);

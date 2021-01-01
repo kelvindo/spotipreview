@@ -77,14 +77,15 @@ function TracklistPlayer({ songSamples, onClick }) {
   }, []);
 
   // Consists of:
-  // - Display text for song + artist and a track counter.
+  // - Current Song
+  // - Song artists (clickable)
   // - Track player control buttons.
-  // - Audio player.
+  // - Audio player
   return (
     <div className="tracklistPlayerMain">
       { songSamples.length > 0 &&
         <div>
-          <p>{currentIndex + 1}/{songSamples.length} {currentSongArtist}</p>
+          <p>{currentSongArtist}</p>
           {songSamples[currentIndex].artists.map((artist, index) => {
             return <span className="searchResult" onClick={() => onClick(artist.spotify_id, "artist")} key={index}>{artist.name} </span>
           })}
