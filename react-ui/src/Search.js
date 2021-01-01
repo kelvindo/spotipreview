@@ -21,6 +21,9 @@ function Search() {
   // type is the type of entity clicked ("artist" or "playlist").
   const [type, setType] = useState('');
 
+  // spotifyIDStack represents the stack of artists/playlists visited.
+  const [spotifyIDStack, setSpotifyIDStack] = useState([]);
+
   // search send a search request to the API. Populate the search results
   // and clear out the spotifyID and type to stop the song player.
   const search = () => {
@@ -47,6 +50,22 @@ function Search() {
   const clickSearchResult = (spotifyID, type) => {
     setSpotifyID(spotifyID);
     setType(type);
+    setSpotifyIDStack(stack => {
+      stack.push({"spotify_id": spotifyID, "type": type});
+      return stack;
+    });
+  };
+
+  // clickSearchResult is a helper to set the spotifyID and type. This
+  // is passed the SearchResults componenet as a callback.
+  const popSpotifyIDStack = () => {
+    const lastSpotifyID = spotifyIDStack[spotifyIDStack.length - 2];
+    setSpotifyID(lastSpotifyID.spotify_id);
+    setType(lastSpotifyID.type);
+    setSpotifyIDStack(stack => {
+      stack.pop();
+      return stack;
+    });
   };
 
   // Consists of:
@@ -72,6 +91,9 @@ function Search() {
           playlistResults={playlistResults}
           onClick={clickSearchResult}
         />
+      }
+      { spotifyIDStack.length > 1 &&
+        <button className="myButton" onClick={popSpotifyIDStack}>Back</button>
       }
       <Tracklist 
         spotifyID={spotifyID}
