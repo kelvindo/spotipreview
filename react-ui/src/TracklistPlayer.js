@@ -45,7 +45,6 @@ function TracklistPlayer({ songSamples, onClick }) {
   useEffect(() => {
     if (songSamples.length > 0) {
       const song = songSamples[currentIndex].name;
-      const artist = songSamples[currentIndex].artist;
       const songArtist = song ? song: "";
       setCurrentSongArtist(songArtist);
       setCurrentSongSample(songSamples[currentIndex].sample);
