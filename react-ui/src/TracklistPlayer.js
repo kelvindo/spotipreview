@@ -16,9 +16,14 @@ function TracklistPlayer({ songSamples, onClick }) {
   // currentSongSample is the preview URL of the current song.
   const [currentSongSample, setCurrentSongSample] = useState('');
 
-  // prevSong navigates to the previous song.
+  // prevSong navigates to the previous song unless it's the first.
   const prevSong = useCallback(() => {
-    setCurrentIndex(prevIndex => (prevIndex - 1) % songSamples.length)
+    setCurrentIndex(prevIndex => {
+      if (prevIndex == 0) {
+        return prevIndex;
+      }
+      return prevIndex - 1;
+    });
   });
 
   // nextSong navigates to the next song.
