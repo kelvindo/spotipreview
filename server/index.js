@@ -29,10 +29,17 @@ spotifyApi.clientCredentialsGrant().then(
 const extractSongData = (track) => {
   const artists = track.artists.map(artist => { return artist.name });
   const artists_joined = artists.join(", ");
+  const artist_ids = track.artists.map(artist => { 
+    return {
+      "name": artist.name,
+      "spotify_id": artist.id,
+    }
+  });
   return {
     "name": track.name,
     "sample": track.preview_url,
     "artist": artists_joined,
+    "artists": artist_ids,
   }
 };
 

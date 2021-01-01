@@ -3,7 +3,7 @@ import './style.css';
  
 // TracklistPlayer is a stateless componenet that takes in a list of songSamples
 // and creates a music player with track controls.
-function TracklistPlayer({ songSamples }) {
+function TracklistPlayer({ songSamples, onClick }) {
   // audioRef is a reference to the audio element.
   const audioRef = useRef();
 
@@ -46,7 +46,7 @@ function TracklistPlayer({ songSamples }) {
     if (songSamples.length > 0) {
       const song = songSamples[currentIndex].name;
       const artist = songSamples[currentIndex].artist;
-      const songArtist = song ? song + " by " + artist : "";
+      const songArtist = song ? song: "";
       setCurrentSongArtist(songArtist);
       setCurrentSongSample(songSamples[currentIndex].sample);
       audioRef.current.load();
@@ -85,6 +85,9 @@ function TracklistPlayer({ songSamples }) {
       { songSamples.length > 0 &&
         <div>
           <p>{currentIndex + 1}/{songSamples.length} {currentSongArtist}</p>
+          {songSamples[currentIndex].artists.map((artist, index) => {
+            return <span className="searchResult" onClick={() => onClick(artist.spotify_id, "artist")} key={index}>{artist.name} </span>
+          })}
           <div className="trackControls">
           <button className="myButton" onClick={prevSong}>Prev</button>
           <button className="myButton" onClick={nextSong}>Next</button>

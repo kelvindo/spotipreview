@@ -76,6 +76,7 @@ function Search() {
       <Tracklist 
         spotifyID={spotifyID}
         type={type}
+        onClick={clickSearchResult}
       />
     </div>
   );

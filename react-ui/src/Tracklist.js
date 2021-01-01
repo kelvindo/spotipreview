@@ -4,7 +4,7 @@ import TracklistPlayer from './TracklistPlayer';
  
 // Tracklist is a compoenent that takes a spotifyID and type to
 // fetch either artist or playlist info and tracks. 
-function Tracklist({ spotifyID, type }) {
+function Tracklist({ spotifyID, type, onClick }) {
   // displayText shows either artist name or playlist + owner.
   const [displayText, setDisplayText] = useState('')
 
@@ -79,6 +79,7 @@ function Tracklist({ spotifyID, type }) {
       <h3>{ displayText }</h3>
       <TracklistPlayer
         songSamples={songSamples}
+        onClick={onClick}
       />
     </div>
   );
