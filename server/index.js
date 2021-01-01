@@ -125,6 +125,7 @@ if (!isDev && cluster.isMaster) {
     if (req.session.spotifyAccount) {
       isLoggedIn = true;
     }
+    console.log("is_logged_in", isLoggedIn);
     res.json({
       "is_logged_in": isLoggedIn,
     });
@@ -132,6 +133,7 @@ if (!isDev && cluster.isMaster) {
 
   // Search for playlists.
   app.get('/search', function (req, res) {
+    console.log("spotify access", spotifyApi.getAccessToken());
     const searchPromise = spotifyApi.search(req.query.search_query, ["artist", "playlist"], { limit: 5 })
     Promise.all([searchPromise])
     .then(([ searchResults ]) => {
