@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session');
 const path = require('path');
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
@@ -10,7 +11,11 @@ var SpotifyWebApi = require('spotify-web-api-node');
 var spotifyApi = new SpotifyWebApi({
   clientId: process.env.SPOTIFY_ID,
   clientSecret: process.env.SPOTIFY_SECRET,
+  redirectUri: isDev ? "http://localhost:5000/callback" : "http://spotipreview.herokuapp.com/callback",
 });
+
+const callbackRedirect = isDev ? "http://localhost:3000/" : "http://spotipreview.herokuapp.com/";
+var defaultSpotifyAccessToken = "";
 
 spotifyApi.clientCredentialsGrant().then(
   function(data) {
@@ -18,6 +23,7 @@ spotifyApi.clientCredentialsGrant().then(
     console.log('The access token is ' + data.body['access_token']);
  
     // Save the access token so that it's used in future calls
+    defaultSpotifyAccessToken = data.body.access_token;
     spotifyApi.setAccessToken(data.body['access_token']);
   },
   function(err) {
@@ -61,6 +67,52 @@ if (!isDev && cluster.isMaster) {
 
   // Priority serve any static files.
   app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
+
+  // Use the session middleware
+  app.use(session({ 
+    secret: 'keyboard cat', 
+    cookie: { maxAge: 60000 },
+    resave: false,
+    saveUninitialized: false,
+  }));
+
+  // Spotify access token middleware.
+  app.use(function (req, res, next) {
+    if (req.session.spotifyAccount) {
+      const { access_token, refresh_token } = req.session.spotifyAccount;
+      spotifyApi.setAccessToken(access_token);
+      spotifyApi.setRefreshToken(refresh_token);
+    } else {
+      spotifyApi.setAccessToken(defaultSpotifyAccessToken);
+    }
+    next();
+  })
+
+  app.get('/login', (req,res) => {
+    var scopes = ['user-read-private']
+    var authUrl = spotifyApi.createAuthorizeURL(scopes)
+    res.json({
+      "authorize_url": authUrl+"&show_dialog=true",
+    });
+  })
+
+  app.get('/callback', async (req, res) => {
+    const { code } = req.query
+    spotifyApi.authorizationCodeGrant(code)
+    .then((data) => {
+      const { access_token, refresh_token } = data.body
+      spotifyApi.setAccessToken(access_token)
+      spotifyApi.setRefreshToken(refresh_token)
+  
+      req.session.spotifyAccount = { access_token, refresh_token }
+      console.log("callback done", access_token, refresh_token);
+  
+      res.redirect(callbackRedirect);
+    })
+    .catch(function(err) {
+      console.log('Something went wrong!', err);
+    });
+  });
 
   // Search for playlists.
   app.get('/search', function (req, res) {

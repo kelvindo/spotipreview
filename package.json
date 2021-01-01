@@ -15,6 +15,7 @@
   ],
   "dependencies": {
     "express": "^4.16.4",
+    "express-session": "^1.17.1",
     "spotify-web-api-node": "^5.0.0"
   },
   "repository": {
