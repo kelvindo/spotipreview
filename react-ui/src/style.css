@@ -52,8 +52,11 @@ input {
 	top:1px;
 }
 
-.searchResult:hover {
-	background-color:#5cbf2a;
+.clickable {
+	color: #5cbf2a
+}
+.clickable:hover {
+	background-color:#18ab29;
 }
 
 .audioPlayer {

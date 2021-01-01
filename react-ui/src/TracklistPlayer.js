@@ -91,7 +91,7 @@ function TracklistPlayer({ songSamples, onClick }) {
         <div>
           <p>{currentSongArtist}</p>
           {songSamples[currentIndex].artists.map((artist, index) => {
-            return <span className="searchResult" onClick={() => onClick(artist.spotify_id, "artist")} key={index}>{artist.name} </span>
+            return <span className="clickable" onClick={() => onClick(artist.spotify_id, "artist")} key={index}>{artist.name} </span>
           })}
           <div className="trackControls">
           <button className="myButton" onClick={prevSong}>Prev</button>
