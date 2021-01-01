@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const bodyParser = require('body-parser');
 const path = require('path');
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
@@ -42,6 +43,7 @@ const extractSongData = (track) => {
     }
   });
   return {
+    "id": track.id,
     "name": track.name,
     "sample": track.preview_url,
     "artist": artists_joined,
@@ -68,6 +70,10 @@ if (!isDev && cluster.isMaster) {
   // Priority serve any static files.
   app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
 
+  // Body parser.
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
+
   // Use the session middleware
   app.use(session({ 
     secret: 'keyboard cat', 
@@ -89,7 +95,7 @@ if (!isDev && cluster.isMaster) {
   })
 
   app.get('/login', (req,res) => {
-    var scopes = ['user-read-private']
+    var scopes = ['user-library-modify']
     var authUrl = spotifyApi.createAuthorizeURL(scopes)
     res.json({
       "authorize_url": authUrl+"&show_dialog=true",
@@ -113,6 +119,16 @@ if (!isDev && cluster.isMaster) {
       console.log('Something went wrong!', err);
     });
   });
+
+  app.get('/is_logged_in', (req,res) => {
+    var isLoggedIn = false;
+    if (req.session.spotifyAccount) {
+      isLoggedIn = true;
+    }
+    res.json({
+      "is_logged_in": isLoggedIn,
+    });
+  })
 
   // Search for playlists.
   app.get('/search', function (req, res) {
@@ -204,6 +220,17 @@ if (!isDev && cluster.isMaster) {
         "playlist_owner": playlistInfo.body.owner.display_name,
         "song_datas": songDatas,
       });
+    })
+    .catch(function(err) {
+      console.log('Something went wrong!', err);
+    });
+  });
+
+  // Save song to authenticated user's music library.
+  app.post('/save_song', function (req, res) {
+    spotifyApi.addToMySavedTracks([req.body.song_id])
+    .then(() => {
+      res.sendStatus(200);
     })
     .catch(function(err) {
       console.log('Something went wrong!', err);

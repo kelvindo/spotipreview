@@ -16,6 +16,9 @@ function TracklistPlayer({ songSamples, onClick }) {
   // currentSongSample is the preview URL of the current song.
   const [currentSongSample, setCurrentSongSample] = useState('');
 
+  // isLoggedIn determines if the user is authenticated.
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   // prevSong navigates to the previous song unless it's the first.
   const prevSong = useCallback(() => {
     setCurrentIndex(prevIndex => {
@@ -30,6 +33,40 @@ function TracklistPlayer({ songSamples, onClick }) {
   const nextSong = useCallback(() => {
     setCurrentIndex(prevIndex => (prevIndex + 1) % songSamples.length)
   });
+
+  // saveSong sends a POST request to save a song to the user's library.
+  const saveSong = (songID) => {
+    fetch("/save_song", {
+      method: 'POST',
+      body: JSON.stringify({
+        "song_id": songID,
+      }),
+      headers: { 'Content-Type': 'application/json' }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`status ${response.status}`);
+        }
+        console.log("song saved");
+      }).catch(e => {
+        console.log(e);
+      })
+  };
+
+  const fetchIsLoggedIn = () => {
+    fetch("/is_logged_in")
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`status ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(json => {
+        setIsLoggedIn(json.is_logged_in);
+      }).catch(e => {
+        console.log(e);
+      })
+  }
 
   // handleUserKeyPress is a callback to allow using the keyboard arrow keys
   // to navigate tracks.
@@ -69,6 +106,7 @@ function TracklistPlayer({ songSamples, onClick }) {
       audioRef.current.pause();
       audioRef.current.load();
     }
+    fetchIsLoggedIn();
   }, [songSamples]);
 
    // This effect adds the keyboard event listeners once at the beginning.
@@ -96,6 +134,9 @@ function TracklistPlayer({ songSamples, onClick }) {
           <div className="trackControls">
           <button className="myButton" onClick={prevSong}>Prev</button>
           <button className="myButton" onClick={nextSong}>Next</button>
+          { isLoggedIn &&
+            <button className="myButton" onClick={() => saveSong(songSamples[currentIndex].id)}>Save</button>
+          }  
           </div>
           <audio className="audioPlayer" controls autoPlay ref={audioRef}>
             <source src={currentSongSample} type="audio/mp3"/>
