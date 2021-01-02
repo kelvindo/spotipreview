@@ -76,8 +76,8 @@ if (!isDev && cluster.isMaster) {
 
   // Use the session middleware
   app.use(session({ 
-    secret: 'keyboard cat', 
-    cookie: { maxAge: 60000 },
+    secret: "secret",
+    maxAge: 24 * 60 * 60 * 1000, // 24 hrs
     resave: false,
     saveUninitialized: false,
   }));
@@ -85,12 +85,20 @@ if (!isDev && cluster.isMaster) {
   // Spotify access token middleware.
   app.use(function (req, res, next) {
     if (req.session.spotifyAccount) {
-      const { access_token, refresh_token } = req.session.spotifyAccount;
-      spotifyApi.setAccessToken(access_token);
+      // Refresh the access token.
+      const { refresh_token } = req.session.spotifyAccount;
       spotifyApi.setRefreshToken(refresh_token);
+      spotifyApi.refreshAccessToken()
+      .then((data) => {
+        spotifyApi.setAccessToken(data.body.access_token);
+      })
+      .catch(function(err) {
+        console.log('Something went wrong!', err);
+      });
     } else {
       spotifyApi.setAccessToken(defaultSpotifyAccessToken);
     }
+    // spotifyApi.setAccessToken(defaultSpotifyAccessToken);
     next();
   })
 
@@ -110,7 +118,7 @@ if (!isDev && cluster.isMaster) {
       spotifyApi.setAccessToken(access_token)
       spotifyApi.setRefreshToken(refresh_token)
   
-      req.session.spotifyAccount = { access_token, refresh_token }
+      req.session.spotifyAccount = { refresh_token }
       console.log("callback done", access_token, refresh_token);
   
       res.redirect(callbackRedirect);
