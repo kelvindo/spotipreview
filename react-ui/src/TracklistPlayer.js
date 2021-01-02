@@ -16,6 +16,9 @@ function TracklistPlayer({ songSamples, onClick }) {
   // currentSongSample is the preview URL of the current song.
   const [currentSongSample, setCurrentSongSample] = useState('');
 
+  // saveButtonEnabled is determines whether the save button is clickable.
+  const [saveButtonEnabled, setSaveButtonEnabled] = useState(true);
+
   // isLoggedIn determines if the user is authenticated.
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -47,7 +50,7 @@ function TracklistPlayer({ songSamples, onClick }) {
         if (!response.ok) {
           throw new Error(`status ${response.status}`);
         }
-        console.log("song saved");
+        setSaveButtonEnabled(false);
       }).catch(e => {
         console.log(e);
       })
@@ -90,6 +93,7 @@ function TracklistPlayer({ songSamples, onClick }) {
       const songArtist = song ? song: "";
       setCurrentSongArtist(songArtist);
       setCurrentSongSample(songSamples[currentIndex].sample);
+      setSaveButtonEnabled(true);
       audioRef.current.load();
     } else {
       if (audioRef.current) {
@@ -135,7 +139,12 @@ function TracklistPlayer({ songSamples, onClick }) {
           <button className="myButton" onClick={prevSong}>Prev</button>
           <button className="myButton" onClick={nextSong}>Next</button>
           { isLoggedIn &&
-            <button className="myButton" onClick={() => saveSong(songSamples[currentIndex].id)}>Save</button>
+            <button 
+              className={ saveButtonEnabled ? "myButton" : "myButton saved"} 
+              disabled={!saveButtonEnabled} 
+              onClick={() => saveSong(songSamples[currentIndex].id)}>
+                Save
+            </button>
           }  
           </div>
           <audio className="audioPlayer" controls autoPlay ref={audioRef}>

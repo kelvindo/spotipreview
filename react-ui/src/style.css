@@ -53,10 +53,14 @@ input {
 }
 
 .clickable {
-	color: #5cbf2a
+	color: #5cbf2a;
 }
 .clickable:hover {
 	background-color:#18ab29;
+}
+
+.saved {
+	background-color: #5cbf2a
 }
 
 .audioPlayer {
