@@ -60,7 +60,5 @@ git push heroku master
 ```
 
 ## TODO
- - Authenticate inidividual users to save likes
- - Paginate search results and songs
- - Make artists clickable
- -- Add back button to make app navigatable
+- Paginate search results and songs (infinite scroll)
+- Show user recommended songs
