@@ -133,7 +133,6 @@ if (!isDev && cluster.isMaster) {
     if (req.session.spotifyAccount) {
       isLoggedIn = true;
     }
-    console.log("is_logged_in", isLoggedIn);
     res.json({
       "is_logged_in": isLoggedIn,
     });

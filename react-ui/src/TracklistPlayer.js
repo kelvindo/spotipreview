@@ -22,6 +22,9 @@ function TracklistPlayer({ songSamples, onClick }) {
   // isLoggedIn determines if the user is authenticated.
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  // authorizeURL is used to create a link to log in the user.
+  const [authorizeURL, setAuthorizeURL] = useState('');
+
   // prevSong navigates to the previous song unless it's the first.
   const prevSong = useCallback(() => {
     setCurrentIndex(prevIndex => {
@@ -85,6 +88,22 @@ function TracklistPlayer({ songSamples, onClick }) {
     }
   }, []);
 
+  // getAuthorizeURL queries the server for the authorize URL and sets it.
+  const getAuthorizeURL = () => {
+    fetch("/login")
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`status ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(json => {
+        setAuthorizeURL(json.authorize_url);
+      }).catch(e => {
+        console.log(e);
+      })
+  };
+
   // This effect updates the track player on changes to the currentIndex or
   // song samples. It updates displayed song data and current preview URL.
   useEffect(() => {
@@ -122,10 +141,16 @@ function TracklistPlayer({ songSamples, onClick }) {
     };
   }, []);
 
+  // Fetch the authorize URL.
+  useEffect(() => {
+    getAuthorizeURL();
+  }, []);
+
   // Consists of:
   // - Current Song
   // - Song artists (clickable)
   // - Track player control buttons.
+  // - Save button.
   // - Audio player
   return (
     <div className="tracklistPlayerMain">
@@ -146,6 +171,9 @@ function TracklistPlayer({ songSamples, onClick }) {
                 Save
             </button>
           }  
+          { !isLoggedIn &&
+            <a href={authorizeURL}><button className="myButton">Save Song to Spotify</button></a>
+          }
           </div>
           <audio className="audioPlayer" controls autoPlay ref={audioRef}>
             <source src={currentSongSample} type="audio/mp3"/>
