@@ -1,5 +1,7 @@
 # Spotipreview
-Listen to Spotify previews of playlists and artists.
+Listen to Spotify previews of playlists and artists. Save liked songs to your personal Spotify library.
+
+This project was bootstrapped with [mars/heroku-cra-node](https://github.com/mars/heroku-cra-node).
 
 ## Local Development
 
