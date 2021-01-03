@@ -25,7 +25,7 @@ function TracklistPlayer({ songSamples, onClick }) {
   // prevSong navigates to the previous song unless it's the first.
   const prevSong = useCallback(() => {
     setCurrentIndex(prevIndex => {
-      if (prevIndex == 0) {
+      if (prevIndex === 0) {
         return prevIndex;
       }
       return prevIndex - 1;
