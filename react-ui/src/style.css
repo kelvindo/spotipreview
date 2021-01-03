@@ -60,7 +60,11 @@ input {
 }
 
 .saved {
-	background-color: #5cbf2a
+	background-color: #8a8a8a
+}
+
+.saved:hover {
+	background-color: #8a8a8a
 }
 
 .audioPlayer {
