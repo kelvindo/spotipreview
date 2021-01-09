@@ -77,7 +77,7 @@ if (!isDev && cluster.isMaster) {
   // Use the session middleware
   app.use(session({ 
     secret: "secret",
-    maxAge: 24 * 60 * 60 * 1000, // 24 hrs
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
     resave: false,
     saveUninitialized: false,
   }));
